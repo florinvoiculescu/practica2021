@@ -30,8 +30,13 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
+    Route::get('/boards', [\App\Http\Controllers\BoardsController::class, 'boards'])->name('boards');
     Route::middleware(['admin'])->group(function () {
         Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users.all');
+        Route::post('/users/edit/{id}', [\App\Http\Controllers\AdminController::class, 'edit'])->name('users.edit');
+        Route::delete('/users/delete/{id}', [\App\Http\Controllers\AdminController::class, 'delete'])->name('users.delete');
+
     });
 });
+
+

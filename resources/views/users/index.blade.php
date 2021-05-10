@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Blank Page</h1>
+                    <h1>Users</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -24,7 +24,7 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Bordered Table</h3>
+                <h3 class="card-title">Users edit/delete</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -55,9 +55,9 @@
                                 <td>{{$user->role === \App\Models\User::ROLE_ADMIN ? 'Admin' : 'User'}}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <button class="btn btn-xs btn-primary" type="button" data-user="{{json_encode($user)}}" data-toggle="modal" data-target="#edit-modal">
+                                        <button class="btn btn-xs btn-primary edit_button" type="button" data-user="{{json_encode($user)}}" data-toggle="modal" data-target="#edit-modal">
                                             <i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-xs btn-danger" type="button" data-user="{{json_encode($user)}}" data-toggle="modal" data-target="#delete-modal">
+                                        <button class="btn btn-xs btn-danger delete_button" type="button" data-user="{{json_encode($user)}}" data-toggle="modal" data-target="#delete-modal">
                                             <i class="fas fa-trash"></i></button>
                                     </div>
                                 </td>
@@ -70,14 +70,18 @@
             <!-- /.card-body -->
             <div class="card-footer clearfix">
                 <ul class="pagination pagination-sm m-0 float-right">
+                
                     @if ($users->currentPage() > 1)
                         <li class="page-item"><a class="page-link" href="{{$users->previousPageUrl()}}">&laquo;</a></li>
+                        <li class="page-item"><a class="page-link" href="{{$users->url($users->currentPage())}}">{{$users->currentPage()}}</a></li>
+                    @else
                         <li class="page-item"><a class="page-link" href="{{$users->url(1)}}">1</a></li>
                     @endif
 
                     @if ($users->currentPage() < $users->lastPage() )
-                        <li class="page-item"><a class="page-link" href="{{$users->url($users->lastPage())}}">{{$users->lastPage()}}</a></li>
                         <li class="page-item"><a class="page-link" href="{{$users->nextPageUrl()}}">&raquo;</a></li>
+                    @else
+                        <li class="page-item"><a class="page-link" href="{{$users->url($users->lastPage())}}">{{$users->lastPage()}}</a></li>
                     @endif
                 </ul>
             </div>
@@ -85,52 +89,54 @@
         <!-- /.card -->
 
         <div class="modal fade" id="edit-modal">
+        
             <div class="modal-dialog">
-                <form action="" method="POST">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Edit user</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div id="editName"></div>
-                            <input type="hidden" name="editId" value="" />
-                            <div class="form-group">
-                                <label for="editRole">Role</label>
-                                <select class="custom-select rounded-0" id="editRole">
-                                    <option value="{{\App\Models\User::ROLE_USER}}">User</option>
-                                    <option value="{{\App\Models\User::ROLE_ADMIN}}">Admin</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit user</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="editName"></div>
+                        <input type="hidden" name="editId" value="" />
+                        <div class="form-group">
+                            <label for="editRole">Role</label>
+                            <select class="custom-select rounded-0" id="editRole">
+                                <option value="{{\App\Models\User::ROLE_USER}}">User</option>
+                                <option value="{{\App\Models\User::ROLE_ADMIN}}">Admin</option>
+                            </select>
                         </div>
                     </div>
-                </form>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary edit-button">Save changes</button>
+                    </div>
+                </div>
                 <!-- /.modal-content -->
             </div>
             <!-- /.modal-dialog -->
         </div>
 
         <div class="modal fade" id="delete-modal">
+            
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Default Modal</h4>
+                        <h4 class="modal-title">Delete user</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>One fine body&hellip;</p>
+                        <div id="deleteName"></div>
+                        <!-- <input type="hidden" name="deleteId" value="" /> -->
+                        <p>Id: <span id="deleteId"></span></p>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary delete-button">Delete</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -139,5 +145,70 @@
         </div>
 
     </section>
+    <!-- <script src="js/user.js"></script> -->
     <!-- /.content -->
+
+    <script>
+        $('.edit_button').on('click', function (event) {
+            let modal = $(this);
+            let user = modal.data('user');
+            var user_id = user.id;
+            // console.log(user);
+            // console.log(user_id);
+
+            modal.find('#editName').text(user.name);
+            modal.find('#editRole').val(user.role);
+
+            $('.edit-button').on('click', function (event) {
+                // console.log('test');
+                $.ajax({
+                    type:'POST',
+                    url: "/users/edit/" + user.id,
+                    data: {
+                        role: $('#editRole').val(),
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        if (data) {
+                            window.location.href = '/users';
+                        } else {
+                            alert('Error!');
+                        }
+                    }
+                });
+            });
+        });
+
+        $('.delete_button').on('click', function (event) {
+            let modal = $(this);
+            let user = modal.data('user');
+            var user_id = user.id;
+            console.log();
+            // console.log(user_id);
+
+            $("#delete-modal").find('#deleteId').text(user.id);
+            $("#delete-modal").find('#deleteName').text(user.name);
+            
+            
+            $('.delete-button').on('click', function (event) {
+                $.ajax({
+                    type:'DELETE',
+                    url: "/users/delete/" + user.id,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        if (data) {
+                            window.location.href = '/users';
+                        } else {
+                            alert('Error!');
+                        }
+                    }
+                });
+            });
+        });
+
+    </script>
 @endsection
