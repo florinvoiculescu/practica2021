@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
 
 use App\Models\User;
-use App\Models\Task;
-use App\Models\Board;
-use App\Models\BoardUser;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -16,6 +18,9 @@ use Illuminate\Support\Facades\DB;
  */
 class AdminController extends Controller
 {
+    /**
+     * @return Application|Factory|View
+     */
     public function users()
     {
         $users = DB::table('users')->paginate(10);
@@ -27,48 +32,97 @@ class AdminController extends Controller
             ]
         );
     }
-    
 
-    public function edit(Request $request, $id) {
-        $user = User::findOrFail($id);
-        
-        if (!$request->has('role')) {
-            return false;
+    /**
+     * @param  Request  $request
+     *
+     * @return RedirectResponse
+     */
+    public function updateUser(Request $request): RedirectResponse
+    {
+        $error = '';
+        $success = '';
+
+        if ($request->has('id')) {
+            /** @var User $user */
+            $user = User::find($request->get('id'));
+
+            if ($user) {
+                $role = $request->get('role');
+
+                if (in_array($role, [User::ROLE_USER, User::ROLE_ADMIN])) {
+                    $user->role = $role;
+                    $user->save();
+
+                    $success = 'User saved';
+                } else {
+                    $error = 'Role selected is not valid!';
+                }
+            } else {
+                $error = 'User not found!';
+            }
+        } else {
+            $error = 'Invalid request';
         }
 
-        $user->role = (int)$request->get('role');
-
-        if ($user->save()) {
-            return true;
-            // return redirect('/users')->with('success', 'Successfully deleted the user!');
-        }
-        
-        return false;
-        // return redirect('/users')->with('error', 'Error deleting user!');
+        return redirect()->back()->with([
+            'error' => $error, 'success' => $success
+        ]);
     }
 
-    public function delete($id) {
-        $user = User::findOrFail($id);
+    /**
+     * @param  Request  $request
+     * @param $id
+     *
+     * @return JsonResponse
+     */
+    public function updateUserAjax(Request $request, $id): JsonResponse
+    {
+        $user = User::find($id);
 
-        //Delete tasks
-        $user_tasks = Task::where('assignment', $id)->delete();
-        //Delete board_users
-        $user_boards = BoardUser::where('user_id', $id)->delete();
+        $error = '';
+        $success = '';
 
-        //Delete boards and things related
-        $boards = Board::where('user_id', $id)->get();
-        foreach($boards as $board) {
-            $tasks = Task::where('board_id', $board->id)->delete();
-            $tmp_boards = BoardUser::where('board_id', $board->id)->delete();
-            $board->delete();
+        if ($user) {
+            $role = $request->get('role');
+
+            if (in_array($role, [User::ROLE_USER, User::ROLE_ADMIN])) {
+                $user->role = $role;
+                $user->save();
+                $user->refresh();
+
+                $success = 'User saved';
+            } else {
+                $error = 'Role selected is not valid!';
+            }
+        } else {
+            $error = 'User not found!';
         }
 
-        if ($user->delete()) {
-            return true;
-            // return redirect('/users')->with('success', 'Successfully deleted the user!');
+        return response()->json(['error' => $error, 'success' => $success, 'user' => $user]);
+    }
+
+    /**
+     * @param  Request  $request
+     * @param $id
+     *
+     * @return JsonResponse
+     */
+    public function deleteUser(Request $request, $id): JsonResponse
+    {
+        $user = User::find($id);
+
+        $error = '';
+        $success = '';
+
+        if ($user) {
+            $user->delete();
+
+            $success = 'User deleted';
+        } else {
+            $error = 'User not found!';
         }
-        
-        return false;
-        // return redirect('/users')->with('error', 'Error deleting user!');
+
+        return response()->json(['error' => $error, 'success' => $success]);
     }
 }
