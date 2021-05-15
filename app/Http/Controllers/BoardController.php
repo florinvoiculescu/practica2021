@@ -55,7 +55,7 @@ class BoardController extends Controller
 
     public function deleteBoard($id)
     {
-
+        var_dump("merge"); die();
     }
 
     /**
