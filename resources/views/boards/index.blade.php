@@ -115,6 +115,30 @@
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div class="alert alert-danger hidden" id="boardEditAlert"></div>
+                        <div id="boardEditName"></div>
+                        <input type="hidden" id="boardEditId" value="" />
+                        <!-- <input type="hidden" id="boardEditName" value="" /> -->
+                        <label>Change board name</label><br/>
+                        <input type="text" name="editName" id="boardEditName" value="" />
+
+                        <!-- <div class="row">
+                            <div class="col-12 col-sm-6">
+                                <div class="form-group"><br/>
+                                <label>Select users</label>
+                                <div class="select2-purple">
+                                    <select class="select2" multiple="multiple" data-placeholder="Select a State" data-dropdown-css-class="select2-purple" style="width: 100%;">
+                                        <option>Alabama</option>
+                                        <option>Alaska</option>
+                                        <option>California</option>
+                                        <option>Delaware</option>
+                                        <option>Tennessee</option>
+                                        <option>Texas</option>
+                                        <option>Washington</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div> -->
 
                     </div>
                     <div class="modal-footer justify-content-between">
@@ -151,4 +175,7 @@
 
     </section>
     <!-- /.content -->
+
+   
+
 @endsection
