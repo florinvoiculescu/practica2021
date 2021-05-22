@@ -14,8 +14,6 @@
 
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-        <!-- <script src="../../plugins/select2/js/select2.full.min.js"></script> -->
     </head>
 
     @yield('body')
