@@ -53,6 +53,40 @@ class BoardController extends Controller
         );
     }
 
+
+    /**
+     * @param  Request  $request
+     *
+     * @return JsonResponse
+     */
+    public function addBoard(Request $request): JsonResponse
+    {
+        /** @var Board $board */
+        $board = new Board();
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        $error = '';
+        $success = '';
+              
+        $board->name = $request->get('name');
+        $board->user_id = $user->id;
+        $board->save();
+        $board->refresh();
+
+        $boardUser = new BoardUser();
+        $boardUser->board_id = $board->id;
+        $boardUser->user_id = $user->id;
+        $boardUser->save();
+
+        $success = 'Board saved';
+
+        return response()->json(['error' => $error, 'success' => $success, 'board' => $board]);
+    }
+
+
+
     /**
      * @param  Request  $request
      * @param $id
@@ -181,6 +215,37 @@ class BoardController extends Controller
                 'boardUsers' => $boardUsers
             ]
         );
+    }
+
+     /**
+     * @param  Request  $request
+     * @param $id
+     *
+     * @return JsonResponse
+     */
+    public function addTask(Request $request): JsonResponse
+    {
+        /** @var Task $task */
+        $task = new Task();
+
+        /** @var User $user */
+        //$user = Auth::user();
+
+        //$board = Board::where('user_id', $user->id)->first();
+
+        $error = '';
+        $success = '';
+
+        $task->name = $request->get('name');
+        $task->description = $request->get('description');
+        $task->board_id = $request->get('boardId');
+        $task->assignment = $request->get('assignment');
+        $task->status = Task::STATUS_CREATED;
+        $task->save();
+
+        $success = 'Task saved';
+
+        return response()->json(['error' => $error, 'success' => $success, 'task' => $task]);
     }
 
     /**

@@ -31,6 +31,18 @@ $('#userDeleteModal').on('shown.bs.modal', function(event) {
     modal.find('#userDeleteName').text(user.name);
 });
 
+// $('#boardAddModal').on('shown.bs.modal', function(event) {
+//     let button = $(event.relatedTarget); // Button that triggered the modal
+//     //let board = button.data('board');
+
+//     let modal = $(this);
+
+//     //modal.find('#boardEditId').val(board.id);
+//     modal.find('#boardAddName').val(board.name);
+
+//     modal.find('#boardAddName').trigger('change');
+// });
+
 $('#boardEditModal').on('shown.bs.modal', function(event) {
     let button = $(event.relatedTarget); // Button that triggered the modal
     let board = button.data('board');
@@ -59,6 +71,19 @@ $('#boardDeleteModal').on('shown.bs.modal', function(event) {
     modal.find('#boardDeleteId').val(board.id);
     modal.find('#boardDeleteName').text(board.name);
 });
+
+// $('#taskAddModal').on('shown.bs.modal', function(event) {
+//     let button = $(event.relatedTarget); // Button that triggered the modal
+//     let task = button.data('task');
+
+//     let modal = $(this);
+
+//     modal.find('#taskAddId').val(task.id);
+//     modal.find('#taskAddName').val(task.name);
+//     modal.find('#taskAddDescription').text(task.description);
+//     modal.find('#taskAddAssignment').val(task.assignment ? task.assignment : '');
+//     //modal.find('#taskEditStatus').val(task.status);
+// });
 
 $('#taskEditModal').on('shown.bs.modal', function(event) {
     let button = $(event.relatedTarget); // Button that triggered the modal
@@ -127,6 +152,27 @@ $(document).ready(function() {
 
     $('#boardEditUsers').select2();
 
+    $('#boardAddButton').on('click', function() {
+        $('#boardAddAlert').addClass('hidden');
+
+        //let id = $('#boardEditId').val();
+        let name = $('#boardAddName').val();
+        //let user =
+        //let members = 1;
+        
+        $.ajax({
+            method: 'POST',
+            url: '/board/add',
+            data: {name}
+        }).done(function(response) {
+            if (response.error !== '') {
+                $('#boardAddAlert').text(response.error).removeClass('hidden');
+            } else {
+                window.location.reload();
+            }
+        });
+    });
+
     $('#boardEditButton').on('click', function() {
         $('#boardEditAlert').addClass('hidden');
 
@@ -163,6 +209,29 @@ $(document).ready(function() {
         }).done(function(response) {
             if (response.error !== '') {
                 $('#boardDeleteAlert').text(response.error).removeClass('hidden');
+            } else {
+                window.location.reload();
+            }
+        });
+    });
+
+    $('#taskAddButton').on('click', function() {
+        $('#taskAddAlert').addClass('hidden');
+
+        //let id = $('#taskAddId').val();
+        let name = $('#taskAddName').val();
+        let description = $('#taskAddDescription').val();
+        let assignment = $('#taskAddAssignment').val();
+        let boardId = $('#changeBoard').val();
+        //let status = $('#taskAddStatus').val();
+
+        $.ajax({
+            method: 'POST',
+            url: '/task/add',
+            data: {name, description, assignment, boardId}
+        }).done(function(response) {
+            if (response.error !== '') {
+                $('#taskAddAlert').text(response.error).removeClass('hidden');
             } else {
                 window.location.reload();
             }

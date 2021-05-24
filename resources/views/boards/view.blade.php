@@ -26,6 +26,11 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">{{$board->name}}</h3>
+                <button type="button" 
+                    class="btn float-sm-right btn-outline-primary btn-xs" 
+                    data-toggle="modal"
+                    data-board="{{json_encode('')}}" 
+                    data-target="#taskAddModal">Add task</button>
             </div>
 
             <div class="card-body">
@@ -128,6 +133,84 @@
             </div>
         </div>
         <!-- /.card -->
+        
+        <!-- <div class="modal fade" id="taskAddModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add task</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger hidden" id="taskAddAlert"></div>
+                        <input type="hidden" id="taskAddId" value="" />
+                        <div class="form-group">
+                            <label for="taskAddName">Name</label>
+                            <input type="text" class="form-control" id="taskAddName" placeholder="Name">
+                            <label for="taskAddDescription">Description</label>
+                            <input type="text" class="form-control" id="taskAddDescription" placeholder="Description">
+                            <label for="taskAddAssignment">Description</label>
+                            <input type="text" class="form-control" id="taskAddAssignment" placeholder="Assignment">
+                            <label for="taskAddStatus">Description</label>
+                            <input type="text" class="form-control" id="taskAddStatus" placeholder="Status">
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="taskAddButton">Add task</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="modal fade" id="taskAddModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add task</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger hidden" id="taskAddAlert"></div>
+                        <input type="hidden" id="taskAddId" value="" />
+                        <div class="form-group">
+                            <label for="taskAddName">Name</label>
+                            <input type="text" class="form-control" id="taskAddName" placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="taskAddDescription">Description</label>
+                            <textarea class="form-control" id="taskAddDescription" placeholder="Description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskAddAssignment">Assignment</label>
+                            <select class="custom-select rounded-0" id="taskAddAssignment">
+                                <option value="">Unassigned</option>
+                                @foreach ($boardUsers as $boardUser)
+                                    <option value="{{$boardUser->user_id}}">{{$boardUser->user->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="taskAddStatus">Status</label>
+                            <select class="custom-select rounded-0" id="taskAddStatus">
+                                <option value="0">Created</option>
+                                <option value="1">In progress</option>
+                                <option value="2">Done</option>
+                            </select>
+                        </div> -->
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="taskAddButton">Add task</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade" id="taskEditModal">
             <div class="modal-dialog">
